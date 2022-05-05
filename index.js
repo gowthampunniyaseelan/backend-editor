@@ -17,7 +17,7 @@ app.listen(port,()=>{
 })
 
 
-app.post('/api/signup',async (req,res)=>{
+app.post('https://online-code-editor-25.herokuapp.com/api/signup',async (req,res)=>{
   try{
     const newPassword = await bcrypt.hash(req.body.password,10)
     const user = await User.create({
@@ -31,7 +31,7 @@ app.post('/api/signup',async (req,res)=>{
   }
 })
 
-app.post('/api/login',async (req,res)=>{
+app.post('https://online-code-editor-25.herokuapp.com/api/login',async (req,res)=>{
     const user = await User.findOne({
       email:req.body.email
     })
