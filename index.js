@@ -11,13 +11,13 @@ app.use(express.json())
 
 mongoose.connect("mongodb+srv://gowtham:%40Laraps25@cluster0.jtwam.mongodb.net/myFirstDatabase?retryWrites=true&w=majority")
 
-const port = 8000
-app.listen(port,()=>{
-  console.log(`Node.js running on port: ${port}`)
+const PORT = process.env.PORT || 5000
+app.listen(PORT,()=>{
+  console.log(`Node.js running on port: ${PORT}`)
 })
 
 
-app.post('https://friendly-chimera-0f78a3.netlify.app/api/signup',async (req,res)=>{
+app.post('/api/signup',async (req,res)=>{
   try{
     const newPassword = await bcrypt.hash(req.body.password,10)
     const user = await User.create({
@@ -31,7 +31,7 @@ app.post('https://friendly-chimera-0f78a3.netlify.app/api/signup',async (req,res
   }
 })
 
-app.post('https://friendly-chimera-0f78a3.netlify.app/api/login',async (req,res)=>{
+app.post('/api/login',async (req,res)=>{
     const user = await User.findOne({
       email:req.body.email
     })
@@ -48,3 +48,11 @@ app.post('https://friendly-chimera-0f78a3.netlify.app/api/login',async (req,res)
       return res.json({status:"Invalid email or password",user:false})
     }
 })
+
+
+if(process.env.NODE_ENV === "production"){
+  app.use(express.static(path.join(__dirname,"editor/build")))
+  app.get("*",(req,res)=>{
+    res.sendFile(path.join(__dirname,"editor/build/index.html"))
+  })
+}
